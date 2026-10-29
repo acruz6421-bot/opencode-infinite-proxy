@@ -14,6 +14,17 @@ const WARP_CLI = process.env.WARP_CLI || DEFAULT_WARP_CLI;
 const WARP_PROXY = process.env.WARP_PROXY || "http://127.0.0.1:40000";
 const KEY_FILE = path.join(__dirname, "warp-key.txt");
 
+async function execWarp(subcommand) {
+  try {
+    return await execAsync(`${WARP_CLI} --accept-tos ${subcommand}`);
+  } catch (err) {
+    if (err.message && err.message.toLowerCase().includes("unrecognized")) {
+      return await execAsync(`${WARP_CLI} ${subcommand}`);
+    }
+    throw err;
+  }
+}
+
 export function getWarpLicense() {
   if (process.env.WARP_LICENSE && process.env.WARP_LICENSE.trim()) {
     return process.env.WARP_LICENSE.trim();
@@ -63,11 +74,12 @@ export async function ensureWarpReady() {
 
   console.log("[warp-rotator] Iniciando WARP em modo proxy local (porta 40000)...");
   try {
-    await execAsync(`${WARP_CLI} --accept-tos mode proxy`).catch(() => execAsync(`${WARP_CLI} mode proxy`));
+    await execWarp("mode proxy");
+    await execWarp("proxy port 40000").catch(() => {});
     if (license) {
-      await execAsync(`${WARP_CLI} --accept-tos registration license ${license}`).catch(() => {});
+      await execWarp(`registration license ${license}`).catch(() => {});
     }
-    await execAsync(`${WARP_CLI} --accept-tos connect`).catch(() => execAsync(`${WARP_CLI} connect`));
+    await execWarp("connect");
     await new Promise(r => setTimeout(r, 2500));
     const checkAfter = await getCurrentIp();
     console.log(`[warp-rotator] ✅ WARP inicializado. IP de saida: ${checkAfter.ip} (warp=${checkAfter.warp})`);
@@ -100,28 +112,31 @@ export async function rotateWarp(reason = "quota") {
     console.log(`[warp-rotator] 🔄 Limite atingido (${reason}). IP atual: ${oldIp}`);
 
     try {
-      await execAsync(`${WARP_CLI} disconnect`);
+      await execWarp("disconnect");
       await new Promise(r => setTimeout(r, 1200));
-      await execAsync(`${WARP_CLI} connect`);
+      await execWarp("connect");
       await new Promise(r => setTimeout(r, 2000));
 
       let newInfo = await getCurrentIp();
       let tries = 0;
 
-      while (newInfo.ip === oldIp && tries < 2) {
+      while ((newInfo.ip === oldIp || newInfo.warp === "off" || newInfo.ip === "error") && tries < 2) {
         tries++;
         console.log(`[warp-rotator] IP mantido (${newInfo.ip}), recriando sessao WARP [tentativa ${tries}]...`);
         try {
-          await execAsync(`${WARP_CLI} disconnect`).catch(() => {});
-          await execAsync(`${WARP_CLI} --accept-tos registration new`).catch(() => execAsync(`${WARP_CLI} registration new`));
+          await execWarp("disconnect").catch(() => {});
+          await execWarp("registration delete").catch(() => {});
+          await new Promise(r => setTimeout(r, 800));
+          await execWarp("registration new");
           await new Promise(r => setTimeout(r, 1000));
           if (license) {
-            await execAsync(`${WARP_CLI} --accept-tos registration license ${license}`).catch(() => execAsync(`${WARP_CLI} registration license ${license}`));
-            await new Promise(r => setTimeout(r, 1000));
+            await execWarp(`registration license ${license}`).catch(() => {});
+            await new Promise(r => setTimeout(r, 800));
           }
-          await execAsync(`${WARP_CLI} --accept-tos mode proxy`).catch(() => execAsync(`${WARP_CLI} mode proxy`));
-          await execAsync(`${WARP_CLI} --accept-tos connect`).catch(() => execAsync(`${WARP_CLI} connect`));
-          await new Promise(r => setTimeout(r, 2000));
+          await execWarp("mode proxy");
+          await execWarp("proxy port 40000").catch(() => {});
+          await execWarp("connect");
+          await new Promise(r => setTimeout(r, 2200));
         } catch (subErr) {
           console.error("[warp-rotator] Erro ao re-registrar:", subErr.message);
         }
