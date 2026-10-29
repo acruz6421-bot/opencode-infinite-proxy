@@ -1,0 +1,90 @@
+========================================================================
+   OPENCODE ZEN PROXY INFINITE - GUIA DE INSTALACAO E MODO DE USAR
+========================================================================
+
+O QUE E ESTE SISTEMA?
+---------------------
+Este servidor local transforma os modelos gratuitos oferecidos pelo
+gateway do OpenCode em uma API local compativel com OpenAI e Anthropic
+(Claude Code, Cursor, Cline, Roo Code, Aider, etc.), com suporte total
+a Tool Calling, Raciocinio (Reasoning) e Streaming.
+
+DIFERENCIAL (COTA INFINITA COM AUTO-ROTATE):
+Quando o limite de uso gratuito por IP e atingido (Erro 429), o proprio
+proxy intercepta o aviso, rotaciona automaticamente o IP de saida via
+Cloudflare WARP em ~3 segundos, renova a sessao e repete a requisicao
+sem derrubar ou interromper o seu agente!
+O WARP roda em "Modo Proxy Isolado" (porta 40000), ou seja: NAO altera
+o IP do seu Windows, nao derruba jogos, downloads ou navegacao.
+
+
+========================================================================
+   PASSO 1: OBTER SUA CHAVE DO CLOUDFLARE WARP (OBRIGATORIO)
+========================================================================
+
+Para que o proxy possa autenticar e rotacionar o tunel do Cloudflare
+WARP, voce precisa de uma Chave de Licenca (License Key) do WARP.
+--> PODE SER UMA CHAVE GRATUITA OU UMA CHAVE PAGA (WARP+ UNLIMITED).
+
+Como conseguir sua chave (Gratuita ou Paga):
+1. Baixe o aplicativo "1.1.1.1: Faster Internet" no celular (Android/iOS)
+   ou abra o Cloudflare WARP no PC.
+2. No app, va em:
+   Configuracoes (icone de engrenagem) -> Conta (Account) -> Chave (Key)
+3. Copie o codigo no formato: xxxxxxxx-xxxxxxxx-xxxxxxxx
+   (Exemplo: a1b2c3d4-e5f6g7h8-i9j0k1l2)
+
+
+========================================================================
+   PASSO 2: INICIAR O PROXY (2 CLIQUES)
+========================================================================
+
+1. De dois cliques no arquivo:
+   INICIAR_PROXY.bat
+
+2. Na primeira vez que abrir:
+   - Se voce nao tiver o Cloudflare WARP ou o Bun instalados, o proprio
+     script instala automaticamente para voce.
+   - Ele vai pedir para voce colar a sua Chave do WARP. Cole a chave e
+     aperte ENTER (ela ficara salva no arquivo warp-key.txt).
+   - Caso queira trocar de chave no futuro, basta clicar em
+     TROCAR_KEY_WARP.bat.
+
+3. Mantenha a janela preta aberta (voce pode minimiza-la).
+
+
+========================================================================
+   PASSO 3: COMO CONECTAR NAS SUAS FERRAMENTAS
+========================================================================
+
+Com o INICIAR_PROXY.bat aberto, use os seguintes dados em qualquer
+ferramenta ou agente de IA:
+
+- Base URL (OpenAI):      http://127.0.0.1:8787/v1
+- Base URL (Anthropic):   http://127.0.0.1:8787/v1
+- API Key:                public   (ou qualquer texto)
+- Painel no Navegador:    http://127.0.0.1:8787/
+
+Modelos Gratuitos Disponiveis (verifique a lista ao vivo no Painel):
+- deepseek-v4.1-flash-free      (Excelente p/ codigo, raciocinio e tools)
+- big-pickle                    (Modelo principal pesado do OpenCode)
+- glm-5.3-flash-free            (Rapido e estavel para codigo)
+- mimo-v2.6-flash-free          (Respostas rapidas)
+- nemotron-3.5-super-vl-free    (Ultra rapido, suporte a visao)
+- nemotron-3.5-lightning-free   (Agentes e automacao)
+- flint-40b-free                (Uso geral de baixa latencia)
+- beam-free                     (Modelo alternativo)
+
+------------------------------------------------------------------------
+EXEMPLO NO CLAUDE CODE:
+No terminal (PowerShell ou CMD), rode:
+  set ANTHROPIC_BASE_URL=http://127.0.0.1:8787
+  set ANTHROPIC_AUTH_TOKEN=public
+  claude --model deepseek-v4.1-flash-free
+
+EXEMPLO NO CLINE / ROO CODE / CONTINUE (VS Code):
+  API Provider: OpenAI Compatible
+  Base URL:     http://127.0.0.1:8787/v1
+  API Key:      public
+  Model ID:     deepseek-v4.1-flash-free
+========================================================================

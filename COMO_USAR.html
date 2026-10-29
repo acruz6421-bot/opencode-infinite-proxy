@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Guia de Uso - OpenCode Zen Proxy Infinite</title>
+<style>
+  body { background: #0d1117; color: #e6edf3; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 820px; margin: 40px auto; padding: 0 20px; }
+  h1, h2 { color: #ff7b00; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 18px 22px; margin-bottom: 20px; }
+  code, pre { background: #010409; color: #79c0ff; padding: 3px 6px; border-radius: 4px; font-family: Consolas, monospace; }
+  pre { padding: 14px; overflow-x: auto; border: 1px solid #21262d; }
+  .badge { display: inline-block; background: #238636; color: #fff; font-size: 12px; font-weight: bold; padding: 2px 8px; border-radius: 12px; }
+</style>
+</head>
+<body>
+  <h1>⚡ OpenCode Zen Proxy Infinite</h1>
+  <p>Servidor proxy reverso com <strong>Auto-Rotação de IP via Cloudflare WARP</strong> para uso ilimitado dos modelos gratuitos do OpenCode em qualquer agente (Claude Code, Cline, Roo Code, Cursor, etc.).</p>
+
+  <div class="card">
+    <h2>1. Pré-requisito: Chave do Cloudflare WARP <span class="badge">Gratuito ou Pago</span></h2>
+    <p>Para que o proxy possa girar o IP automaticamente quando a cota gratuita por IP atingir o limite, é <strong>obrigatório informar uma Chave de Licença do Cloudflare WARP</strong> (pode ser uma chave da versão <strong>Gratuita</strong> ou da versão <strong>WARP+ Unlimited</strong>).</p>
+    <ol>
+      <li>Abra o app <strong>1.1.1.1</strong> no celular (Android/iOS) ou no PC.</li>
+      <li>Vá em <strong>Configurações (Engrenagem) &rarr; Conta &rarr; Chave (Key)</strong>.</li>
+      <li>Copie a chave no formato <code>xxxxxxxx-xxxxxxxx-xxxxxxxx</code>.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>2. Como Iniciar (2 Cliques)</h2>
+    <ol>
+      <li>Dê dois cliques em <code>INICIAR_PROXY.bat</code>.</li>
+      <li>Na primeira execução, se o Cloudflare WARP ou o Bun não estiverem instalados, o script fará a instalação automática.</li>
+      <li>Cole sua chave do WARP quando solicitado e pressione <strong>Enter</strong> (ela ficará salva em <code>warp-key.txt</code>).</li>
+      <li>Deixe a janela aberta (pode minimizar). O WARP opera em <em>Modo Proxy Local (porta 40000)</em> e <strong>não altera nem desconecta a internet do seu PC</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Dados de Conexão da API</h2>
+    <ul>
+      <li><strong>Dashboard / Catálogo ao vivo:</strong> <a href="http://127.0.0.1:8787/" style="color:#58a6ff">http://127.0.0.1:8787/</a></li>
+      <li><strong>Base URL (OpenAI Compatible):</strong> <code>http://127.0.0.1:8787/v1</code></li>
+      <li><strong>Base URL (Anthropic / Claude Code):</strong> <code>http://127.0.0.1:8787/v1</code></li>
+      <li><strong>API Key:</strong> <code>public</code></li>
+      <li><strong>Principais Modelos:</strong> <code>deepseek-v4.1-flash-free</code>, <code>big-pickle</code>, <code>glm-5.3-flash-free</code>, <code>nemotron-3.5-super-vl-free</code>, <code>mimo-v2.6-flash-free</code></li>
+    </ul>
+  </div>
+</body>
+</html>
