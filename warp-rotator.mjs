@@ -7,7 +7,10 @@ import { fileURLToPath } from "node:url";
 const execAsync = promisify(exec);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const WARP_CLI = process.env.WARP_CLI || "\"C:/Program Files/Cloudflare/Cloudflare WARP/warp-cli.exe\"";
+const DEFAULT_WARP_CLI = process.platform === "win32"
+  ? "\"C:/Program Files/Cloudflare/Cloudflare WARP/warp-cli.exe\""
+  : "warp-cli";
+const WARP_CLI = process.env.WARP_CLI || DEFAULT_WARP_CLI;
 const WARP_PROXY = process.env.WARP_PROXY || "http://127.0.0.1:40000";
 const KEY_FILE = path.join(__dirname, "warp-key.txt");
 
